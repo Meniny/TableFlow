@@ -1,4 +1,6 @@
 .DS_Store
+/Sample/Pods
 /CocoaPod Example/PitayaExample.xcworkspace
 /CocoaPod Example/Podfile.lock
 /CocoaPod Example/Pods
+*.lock
