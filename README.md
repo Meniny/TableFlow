@@ -41,3 +41,124 @@ You are welcome to fork and submit pull requests.
 ## License
 
 `TableFlow` is open-sourced software, licensed under the `MIT` license.
+
+## Usage
+
+Define a cell:
+
+```swift
+import UIKit
+import TableFlow
+
+open class SiteInfoTableViewCell: UITableViewCell, DeclarativeCell {
+
+    public typealias T = Site
+    
+    @IBOutlet weak var urlLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var iconView: UIImageView!
+    
+    public func configure(_ site: Site, path: IndexPath) {
+        self.titleLabel.text = site.name
+        self.urlLabel.text = site.url
+        self.iconView.image = site.icon.image
+    }
+    
+    open override func awakeFromNib() {
+        super.awakeFromNib()
+        self.layoutMargins = UIEdgeInsets.zero
+        self.separatorInset = UIEdgeInsets.zero
+    }
+    
+}
+```
+
+and models:
+
+```swift
+import Foundation
+import UIKit
+
+public enum Image {
+    case named(String)
+    case none
+    
+    public var image: UIImage? {
+        switch self {
+        case let .named(name):
+            return UIImage.init(named: name)
+        default:
+            return nil
+        }
+    }
+}
+
+public struct Site {
+    public let name: String
+    public let url: String
+    public let icon: Image
+}
+```
+
+now go:
+
+```swift
+import UIKit
+import TableFlow
+
+class ViewController: UITableViewController {
+
+    lazy var manager: TableManager = {
+        return TableManager.init(table: self.tableView)
+    }()
+    
+    var dataSource: [Site] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.tableFooterView = UITableViewHeaderFooterView.init()
+        
+        self.refresh()
+    }
+
+    func refresh() {
+        self.manager.removeAll()
+        self.manager.add(section: self.generateSection())
+        self.manager.reloadData()
+    }
+    
+    func fillData() {
+        let image = Image.named("avatar")
+        self.dataSource.append(Site.init(name: "Github", url: "https://github.com", icon: image))
+        self.dataSource.append(Site.init(name: "Google", url: "https://google.com", icon: image))
+        self.dataSource.append(Site.init(name: "Twitter", url: "https://twitter.com", icon: image))
+        self.dataSource.append(Site.init(name: "Facebook", url: "https://facebook.com", icon: image))
+        self.dataSource.append(Site.init(name: "Youtube", url: "https://youtube.com", icon: image))
+    }
+    
+    let SECTION_ID = "SECTION_ID"
+    
+    func generateSection() -> Section {
+        self.fillData()
+        
+        var rows: [Row<SiteInfoTableViewCell>] = []
+        for s in dataSource {
+            let row = Row<SiteInfoTableViewCell>.init(model: s)
+            row.onTap = { r in
+                self.alert(s.name)
+                return RowTapBehaviour.deselect(true)
+            }
+            rows.append(row)
+        }
+        let section = Section.init(id: SECTION_ID, rows: rows)
+        return section
+    }
+    
+    func alert(_ text: String) {
+        let controller = UIAlertController.init(title: "Message", message: text, preferredStyle: .alert)
+        controller.addAction(UIAlertAction.init(title: "Done", style: .cancel, handler: nil))
+        self.present(controller, animated: true, completion: nil)
+    }
+}
+```
