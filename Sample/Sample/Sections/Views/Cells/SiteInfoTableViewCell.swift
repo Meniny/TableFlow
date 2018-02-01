@@ -10,23 +10,37 @@ import UIKit
 import TableFlow
 
 open class SiteInfoTableViewCell: UITableViewCell, DeclarativeCell {
-
+    public var model: Site?
+    
     public typealias T = Site
+    
+    public var _onChange: ((Site) -> Void)?
     
     @IBOutlet weak var urlLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconView: UIImageView!
     
     public func configure(_ site: Site, path: IndexPath) {
-        self.titleLabel.text = site.name
-        self.urlLabel.text = site.url
-        self.iconView.image = site.icon.image
+        self.model = site
+        self.titleLabel.text = self.model?.name
+        self.urlLabel.text = self.model?.url
+        self.iconView.image = self.model?.icon.image
     }
     
     open override func awakeFromNib() {
         super.awakeFromNib()
+        
+        
         self.layoutMargins = UIEdgeInsets.zero
         self.separatorInset = UIEdgeInsets.zero
     }
     
+}
+
+public typealias SiteRow = Row<SiteInfoTableViewCell>
+
+public extension Row where Cell == SiteInfoTableViewCell {
+    public convenience init(name: String, url: String, icon: Image) {
+        self.init(model: Site.init(name: name, url: url, icon: icon))
+    }
 }

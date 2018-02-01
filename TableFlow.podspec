@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "TableFlow"
-  s.version          = "1.0.0"
+  s.version          = "1.0.1"
   s.summary          = "UITableView manager."
 
   s.homepage         = "https://github.com/Meniny/TableFlow"
@@ -12,7 +12,8 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files     = 'TableFlow/**/*.*'
+  s.source_files     = 'TableFlow/**/*.swift'
+  s.resources        = ["TableFlow/**/*.xib"]
   # s.public_header_files = 'UIRefresher/*{.h}'
   s.frameworks       = 'Foundation', 'UIKit'
 end

@@ -6,6 +6,8 @@ open class Row<Cell: DeclarativeCell>: RowProtocol where Cell: UITableViewCell {
 	
 	public typealias TableRowConfigurator = ((_ maker: Row) -> (Void))
 	
+    public var accessoryType: UITableViewCellAccessoryType = .none
+    
 	/// Item represented by the cell
 	open let model: Cell.T
 	
@@ -87,57 +89,99 @@ open class Row<Cell: DeclarativeCell>: RowProtocol where Cell: UITableViewCell {
 		self._instance = instance // set instance of the cell
 		self._indexPath = path // set the indexPath of the cell
 		self.cell?.configure(self.model, path: path)
+        self.cell?._onChange = self._onChange
 	}
 	
-	/// Message received when a cell instance has been dequeued from table
-	public var onDequeue: RowProtocol.RowReference? = nil
+    public var _onChange: ((Cell.T) -> Void)?
+    public func onChange(_ c: ((Cell.T) -> Void)?) {
+        self._onChange = c
+    }
+    
+    public var _onDequeue: RowProtocol.RowReference? = nil
+    /// Message received when a cell instance has been dequeued from table
+    public func onDequeue(_ c: RowProtocol.RowReference?) {
+        self._onDequeue = c
+    }
 
-	/// Message received when user tap on a cell at specified path. You must provide a default behaviour
-	/// by returning one of the `RowTapBehaviour` options. If `nil` is provided the default
-	/// behaviour is `deselect` with animation.
-	public var onTap: ((RowProtocol) -> (RowTapBehaviour?))? = nil
-
+    public var _onTap: ((RowProtocol) -> (RowTapBehaviour?))? = nil
+    /// Message received when user tap on a cell at specified path. You must provide a default behaviour
+    /// by returning one of the `RowTapBehaviour` options. If `nil` is provided the default
+    /// behaviour is `deselect` with animation.
+    public func onTap(_ c: ((RowProtocol) -> (RowTapBehaviour?))?) {
+        self._onTap = c
+    }
+    
+    public var _onDelete: RowReference? = nil
 	/// Message received when a cell at specified path is about to be removed.
-	public var onDelete: RowReference? = nil
+    public func onDelete(_ c: RowReference?) {
+        self._onDelete = c
+    }
 
+    public var _onSelect: RowReference? = nil
 	/// Message received when a selection has been made. Selection still active only if
 	/// `onTap` returned `.keepSelection` option.
-	public var onSelect: RowReference? = nil
+    public func onSelect(_ c: RowReference?) {
+        self._onSelect = c
+    }
 
+    public var _onEdit: ((RowProtocol) -> ([UITableViewRowAction]?))? = nil
 	/// Message received when a cell at specified path is about to be swiped in order to allow
 	/// on or more actions into the context.
 	/// You must provide an array of UITableViewRowAction objects representing the actions
 	/// for the row. Each action you provide is used to create a button that the user can tap.
 	/// By default no swipe actions are returned.
-	public var onEdit: ((RowProtocol) -> ([UITableViewRowAction]?))? = nil
+    public func onEdit(_ c: ((RowProtocol) -> ([UITableViewRowAction]?))?) {
+        self._onEdit = c
+    }
 
+    public var _onDeselect: RowReference? = nil
 	/// Message received when cell at specified path did deselected
-	public var onDeselect: RowReference? = nil
+    public func onDeselect(_ c: RowReference?) {
+        self._onDeselect = c
+    }
 
+    public var _onWillDisplay: RowReference? = nil
 	/// Message received when a cell at specified path is about to be displayed.
 	/// Gives the delegate the opportunity to modify the specified cell at
 	/// the given row and column location before the browser displays it.
-	public var onWillDisplay: RowReference? = nil
+    public func onWillDisplay(_ c: RowReference?) {
+        self._onWillDisplay = c
+    }
 
+    public var _onDidEndDisplay: RowReference? = nil
 	/// The cell was removed from the table
-	public var onDidEndDisplay: RowReference? = nil
+    public func onDidEndDisplay(_ c: RowReference?) {
+        self._onDidEndDisplay = c
+    }
 
+    public var _onWillSelect: ((RowProtocol) -> (IndexPath?))? = nil
 	/// Message received when a cell at specified path is about to be selected.
-	public var onWillSelect: ((RowProtocol) -> (IndexPath?))? = nil
+    public func onWillSelect(_ c: ((RowProtocol) -> (IndexPath?))?) {
+        self._onWillSelect = c
+    }
 
+    public var _onShouldHighlight: ((RowProtocol) -> (Bool))? = nil
 	/// Message received when a cell at specified path is about to be selected.
 	/// If `false` is returned highlight of the cell will be disabled.
 	/// If not implemented the default behaviour of the table is to allow highlights of the cell.
-	public var onShouldHighlight: ((RowProtocol) -> (Bool))? = nil
+    public func onShouldHighlight(_ c: ((RowProtocol) -> (Bool))?) {
+        self._onShouldHighlight = c
+    }
 
+    public var _canMove: ((RowProtocol) -> (Bool))? = nil
 	/// Asks the data source whether a given row can be moved to another location in the table view.
 	/// If not implemented `false` is assumed instead.
-	public var canMove: ((RowProtocol) -> (Bool))? = nil
+    public func canMove(_ c: ((RowProtocol) -> (Bool))?) {
+        self._canMove = c
+    }
 
+    public var _shouldIndentOnEditing: ((RowProtocol) -> (Bool))? = nil
 	/// Asks the delegate whether the background of the specified row should be
 	/// indented while the table view is in editing mode.
 	/// If not implemented `true` is returned.
-	public var shouldIndentOnEditing: ((RowProtocol) -> (Bool))? = nil
+    public func shouldIndentOnEditing(_ c: ((RowProtocol) -> (Bool))?) {
+        self._shouldIndentOnEditing = c
+    }
 
 	/// Initialize a new row
 	///
@@ -186,18 +230,22 @@ public protocol DeclarativeCell: class {
 	/// can set this value directly as cell property.
 	/// It will override any `onShouldHighlight` event of the `RowProtocol`.
 	static var shouldHightlight: Bool? { get }
-	
+    
+    var _onChange: ((T) -> Void)? { get set }
+    
 	/// Configure a cell instance just after the dequeue from table instance
 	///
 	/// - Parameters:
-	///   - _: item to render
+	///   - i: item to render
 	///   - path: index path
-	func configure(_: T, path: IndexPath)
+	func configure(_ i: T, path: IndexPath)
+    
+    var model: T? { get set }
 	
 }
 
 public extension DeclarativeCell where Self: UITableViewCell {
-	
+    
 	/// By default reuseIdentifier uses the name of the class you have used
 	/// to declare this cell. This simple rule avoid confusion with naming and produce
 	/// consistent results across your code.

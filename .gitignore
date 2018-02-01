@@ -3,4 +3,6 @@
 /CocoaPod Example/PitayaExample.xcworkspace
 /CocoaPod Example/Podfile.lock
 /CocoaPod Example/Pods
+/Sample/Sample.xcodeproj/xcuserdata
+/Sample/Sample.xcodeproj/xcuserdata/elias.xcuserdatad
 *.lock

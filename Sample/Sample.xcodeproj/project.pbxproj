@@ -29,6 +29,10 @@
 		5C984961202210A400254F76 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		5C9849632022116000254F76 /* SiteInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteInfoTableViewCell.swift; sourceTree = "<group>"; };
 		5C9849642022116000254F76 /* SiteInfoTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SiteInfoTableViewCell.xib; sourceTree = "<group>"; };
+		64D7BD802022D9F400E042B1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		64D7BD812022D9F400E042B1 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = LICENSE.md; path = ../LICENSE.md; sourceTree = "<group>"; };
+		64D7BD822022D9F500E042B1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; name = .gitignore; path = ../.gitignore; sourceTree = "<group>"; };
+		64D7BD832022D9F500E042B1 /* TableFlow.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = TableFlow.podspec; path = ../TableFlow.podspec; sourceTree = "<group>"; };
 		8D57AA25DF843D65A74E44F0 /* Pods-Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Sample/Pods-Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		966407C793EE04245A30D570 /* Pods_Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB90A469F4441287863BE19C /* Pods-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Sample/Pods-Sample.release.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +70,10 @@
 		5C98493C20220F8200254F76 = {
 			isa = PBXGroup;
 			children = (
+				64D7BD822022D9F500E042B1 /* .gitignore */,
+				64D7BD812022D9F400E042B1 /* LICENSE.md */,
+				64D7BD802022D9F400E042B1 /* README.md */,
+				64D7BD832022D9F500E042B1 /* TableFlow.podspec */,
 				5C98494720220F8200254F76 /* Sample */,
 				5C98494620220F8200254F76 /* Products */,
 				0F272B5A29146DC2FA1ED1F2 /* Pods */,

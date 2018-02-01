@@ -52,7 +52,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 			// Only we want to listen for didEndDisplay message we will keep
 			// inside the table manager instance a strong reference to removed row
 			// until message will be dispatched
-			if $0.onDidEndDisplay != nil, let cell = $0._instance {
+			if $0._onDidEndDisplay != nil, let cell = $0._instance {
 				removedRows[cell.hashValue] = $0
 			}
 		}
@@ -570,7 +570,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		}
 		// let cell = tableView.cellForRow(at: indexPath) // instance of the cell
 		// row.onDidEndDisplay?((cell,indexPath)) // send any message
-		row.onDidEndDisplay?(row)
+		row._onDidEndDisplay?(row)
 		// free removed rows instances
 		self.removedRows.removeValue(forKey: hashedRow)
 	}
@@ -590,13 +590,14 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		// Allocate the class
 		let cell = tableView.dequeueReusableCell(withIdentifier: row.reuseIdentifier, for: indexPath)
 		self.adjustLayout(forCell: cell) // adjust width of the cell if necessary
+        cell.accessoryType = row.accessoryType
 		
 		// configure the cell
 		row.configure(cell, path: indexPath)
 		
 		// dispatch dequeue event
 		//row.onDequeue?((cell,indexPath))
-		row.onDequeue?(row)
+		row._onDequeue?(row)
 		
 		return cell
 	}
@@ -806,7 +807,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		//let cell = tableView.cellForRow(at: indexPath) // instance of the cell
 		let row = self.sections[indexPath.section].rows[indexPath.row]
 		
-		if let onWillSelect = row.onWillSelect {
+		if let onWillSelect = row._onWillSelect {
 			//return onWillSelect((cell,indexPath))
 			return onWillSelect(row)
 		} else {
@@ -824,14 +825,14 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		let row = self.sections[indexPath.section].rows[indexPath.row]
 		
 		//let select_behaviour = row.onTap?((cell,indexPath)) ?? .deselect(true)
-		let select_behaviour = row.onTap?(row) ?? .deselect(true)
+		let select_behaviour = row._onTap?(row) ?? .deselect(true)
 		switch select_behaviour {
 		case .deselect(let animated):
 			// remove selection, is a temporary tap selection
 			tableView.deselectRow(at: indexPath, animated: animated)
 		case .keepSelection:
 			//row.onSelect?((cell,indexPath)) // dispatch selection change event
-			row.onSelect?(row) // dispatch selection change event
+			row._onSelect?(row) // dispatch selection change event
 		}
 	}
 	
@@ -845,7 +846,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		//let cell = tableView.cellForRow(at: indexPath)
 		let row = self.sections[indexPath.section].rows[indexPath.row]
 		//row.onDeselect?((cell,indexPath))
-		row.onDeselect?(row)
+		row._onDeselect?(row)
 	}
 	
 	
@@ -861,7 +862,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		//let cell = tableView.cellForRow(at: indexPath)
 		let row = self.sections[indexPath.section].rows[indexPath.row]
 		//row.onWillDisplay?((cell,indexPath))
-		row.onWillDisplay?(row)
+		row._onWillDisplay?(row)
 	}
 	
 	
@@ -880,7 +881,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		if let instanceHighlight = row.shouldHighlight {
 			return instanceHighlight
 		}
-		return row.onShouldHighlight?(row) ?? true
+		return row._onShouldHighlight?(row) ?? true
 	}
 	
 	
@@ -894,7 +895,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		let row = self.sections[indexPath.section].rows[indexPath.row]
 		// If no actions are definined cell is not editable
 		//return row.onEdit?((cell,indexPath))?.count ?? 0 > 0
-		return row.onEdit?(row)?.count ?? 0 > 0
+		return row._onEdit?(row)?.count ?? 0 > 0
 	}
 	
 	
@@ -907,7 +908,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	///            for the row. Each action you provide is used to create a button that the user can tap.
 	public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let row = self.sections[indexPath.section].rows[indexPath.row]
-		return row.onEdit?(row) ?? nil
+		return row._onEdit?(row) ?? nil
 	}
 	
 	
@@ -920,7 +921,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		guard editingStyle == .delete else { return }
 		let row = self.sections[indexPath.section].rows[indexPath.row]
-		row.onDelete?(row)
+		row._onDelete?(row)
 	}
 	
 	
@@ -932,7 +933,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Returns: boolean
 	public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		let row = self.sections[indexPath.section].rows[indexPath.row]
-		return row.canMove?(row) ?? false
+		return row._canMove?(row) ?? false
 	}
 	
 	/// Asks the delegate whether the background of the specified row should be indented
@@ -944,7 +945,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Returns: boolean
 	public func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
 		let row = self.sections[indexPath.section].rows[indexPath.row]
-		return row.shouldIndentOnEditing?(row) ?? true
+		return row._shouldIndentOnEditing?(row) ?? true
 	}
 	
 	///MARK: Private Helper Methods

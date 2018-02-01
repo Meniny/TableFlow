@@ -45,16 +45,32 @@ class ViewController: UITableViewController {
     func generateSection() -> Section {
         self.fillData()
         
-        var rows: [Row<SiteInfoTableViewCell>] = []
+        let section = Section.init(id: SECTION_ID, rows: [])
+        
         for s in dataSource {
+            // Or use the typealias: `SiteRow`
             let row = Row<SiteInfoTableViewCell>.init(model: s)
-            row.onTap = { r in
+            row.onTap({ (r) -> (RowTapBehaviour?) in
                 self.alert(s.name)
                 return RowTapBehaviour.deselect(true)
-            }
-            rows.append(row)
+            })
+            section.add(row)
         }
-        let section = Section.init(id: SECTION_ID, rows: rows)
+        
+        // Or use `Row<SwitchTableViewCell>`
+        let switchRow = SwitchRow.init(title: "Require PC version", isOn: true)
+        switchRow.onChange { (config) in
+            self.alert("\(config.title ?? ""): \(config.isOn)")
+        }
+        section.add(switchRow)
+        
+        let selectionRow = SelectionRow.init(mode: .present, title: "Your age", select: "19", in: "18", "19", "20", "21", "22", "23")
+        selectionRow.accessoryType = .disclosureIndicator
+        selectionRow.onChange { (r) in
+            self.alert(r.default ?? "")
+        }
+        section.add(selectionRow)
+        
         return section
     }
     
