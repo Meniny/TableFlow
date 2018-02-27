@@ -120,6 +120,21 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		self.clearHeightCache()
 		self.tableView?.reloadData()
 	}
+    
+    public func scrollToLastRow(at position: UITableViewScrollPosition, animated: Bool = true) {
+        if let sections = self.tableView?.numberOfSections,
+            sections > 0,
+            let rows = self.tableView?.numberOfRows(inSection: sections - 1),
+            rows > 0 {
+            
+            let index = IndexPath.init(row: rows - 1, section: sections - 1)
+            self.scrollToRow(at: index, at: position, animated: animated)
+        }
+    }
+    
+    public func scrollToRow(at index: IndexPath, at position: UITableViewScrollPosition, animated: Bool) {
+        self.tableView?.scrollToRow(at: index, at: position, animated: animated)
+    }
 	
 	/// Perform an update session on the table. You are able to use all funcs to manipulate sections and rows in sections.
 	/// You must however pay attention to the order of the operations you want to perform.

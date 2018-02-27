@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "TableFlow"
-  s.version          = "1.0.1"
+  s.version          = "1.0.2"
   s.summary          = "UITableView manager."
 
   s.homepage         = "https://github.com/Meniny/TableFlow"

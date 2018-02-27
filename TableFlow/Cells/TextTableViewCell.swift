@@ -14,14 +14,22 @@ open class TextTableViewCell: UITableViewCell, DeclarativeCell {
     
     public func configure(_ i: String, path: IndexPath) {
         self.model = i
-        self.textLabel?.text = self.model
+        self.textLabel?.text = i
     }
     
     public typealias T = String
 
-    open override func awakeFromNib() {
-        super.awakeFromNib()
-        
+    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.config()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.config()
+    }
+    
+    internal func config() {
         self.textLabel?.numberOfLines = 0
         self.textLabel?.font = UIFont.systemFont(ofSize: 16)
         self.textLabel?.textColor = UIColor.darkText
@@ -29,7 +37,7 @@ open class TextTableViewCell: UITableViewCell, DeclarativeCell {
         self.layoutMargins = UIEdgeInsets.zero
         self.separatorInset = UIEdgeInsets.zero
     }
-
+    
 }
 
 public typealias TextRow = Row<TextTableViewCell>
