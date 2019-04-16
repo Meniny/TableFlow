@@ -64,7 +64,7 @@
 import Foundation
 
 public extension Bundle {
-    public var tableFlow: Bundle {
+    var tableFlow: Bundle {
         return Bundle.init(for: TableManager.self)
     }
 }

@@ -27,7 +27,7 @@ open class Section: Equatable, Hashable {
 	/// Index of the section in parent manager (if any).
 	/// Return `nil` if not found.
 	public var index: Int? {
-		get { return self.manager?.sections.index(of: self) }
+		get { return self.manager?.sections.firstIndex(of: self) }
 	}
 	
 	/// Number of rows
@@ -110,7 +110,7 @@ open class Section: Equatable, Hashable {
 	/// Reload this section
 	///
 	/// - Parameter anim: animation to use; if nil `automatic` will be used
-	public func reload(_ anim: UITableViewRowAnimation? = nil) {
+	public func reload(_ anim: UITableView.RowAnimation? = nil) {
 		guard let index = self.index else { return }
 		self.manager?.tableView?.reloadSections(IndexSet(integer: index), with: (anim ?? .automatic))
 	}
@@ -120,7 +120,7 @@ open class Section: Equatable, Hashable {
 	/// - Parameters:
 	///   - indexes: indexes of rows to reload
 	///   - animation: animation to use, `automatic` is used when `nil` is passed.
-	open func reload(rowsAtIndexes indexes: [IndexPath], animation: UITableViewRowAnimation? = nil) {
+	open func reload(rowsAtIndexes indexes: [IndexPath], animation: UITableView.RowAnimation? = nil) {
 		self.manager?.tableView?.reloadRows(at: indexes, with: animation ?? .automatic)
 	}
 
@@ -130,8 +130,8 @@ open class Section: Equatable, Hashable {
 	/// - Parameters:
 	///   - id: identifier of the row
 	///   - animation: animation to use, `automatic` is used when `nil` is passed.
-	open func reload(rowWithID id: String, animation: UITableViewRowAnimation? = nil) {
-		guard let rowIdx = self.rows.index(where: { $0.identifier == id }) else { return }
+	open func reload(rowWithID id: String, animation: UITableView.RowAnimation? = nil) {
+		guard let rowIdx = self.rows.firstIndex(where: { $0.identifier == id }) else { return }
 		let indexPath = IndexPath(row: rowIdx, section: self.index!)
 		self.manager?.tableView?.reloadRows(at: [indexPath], with: animation ?? .automatic)
 	}
@@ -141,7 +141,7 @@ open class Section: Equatable, Hashable {
 	/// - Parameters:
 	///   - ids: ids to search
 	///   - animation: animation to use, `automatic` is used when `nil` is passed.
-	open func reload(rowsWithIDs ids: [String], animation: UITableViewRowAnimation? = nil) {
+	open func reload(rowsWithIDs ids: [String], animation: UITableView.RowAnimation? = nil) {
 		let sectionIdx = self.index!
 		var indexes: [IndexPath] = []
 		self.rows.enumerated().forEach { rowIdx,item in
@@ -255,7 +255,7 @@ open class Section: Equatable, Hashable {
 	/// - Returns: `Int`, `nil` if not found
 	open func index(ofRowWithID identifier: String?) -> Int? {
 		guard let id = identifier else { return nil }
-		return self.rows.index(where: { $0.identifier == id })
+		return self.rows.firstIndex(where: { $0.identifier == id })
 	}
 	
 	

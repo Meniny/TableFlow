@@ -40,7 +40,7 @@ open class SiteInfoTableViewCell: UITableViewCell, DeclarativeCell {
 public typealias SiteRow = Row<SiteInfoTableViewCell>
 
 public extension Row where Cell == SiteInfoTableViewCell {
-    public convenience init(name: String, url: String, icon: Image) {
+    convenience init(name: String, url: String, icon: Image) {
         self.init(model: Site.init(name: name, url: url, icon: icon))
     }
 }

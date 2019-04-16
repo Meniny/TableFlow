@@ -69,7 +69,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	
 	/// The row animation that will be displayed when sections are inserted or removed.
 	/// You can change it just before doing changes to the model
-	public var sectionAnimation: UITableViewRowAnimation = .automatic
+	public var sectionAnimation: UITableView.RowAnimation = .automatic
 	
 	/// Registered `UITableViewCell` identifiers
 	private var registeredCellIDs: Set<String> = []
@@ -121,7 +121,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		self.tableView?.reloadData()
 	}
     
-    public func scrollToLastRow(at position: UITableViewScrollPosition, animated: Bool = true) {
+    public func scrollToLastRow(at position: UITableView.ScrollPosition, animated: Bool = true) {
         if let sections = self.tableView?.numberOfSections,
             sections > 0,
             let rows = self.tableView?.numberOfRows(inSection: sections - 1),
@@ -132,7 +132,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    public func scrollToRow(at index: IndexPath, at position: UITableViewScrollPosition, animated: Bool) {
+    public func scrollToRow(at index: IndexPath, at position: UITableView.ScrollPosition, animated: Bool) {
         self.tableView?.scrollToRow(at: index, at: position, animated: animated)
     }
 	
@@ -149,7 +149,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Parameters:
 	///   - animation: animation to perform; if `nil` no animation is performed and a simple `reloadData()` is done instead.
 	///   - block: block with the operation to perform.
-	public func update(animation: UITableViewRowAnimation? = nil,
+	public func update(animation: UITableView.RowAnimation? = nil,
 	                   _ block: @escaping (() -> (Void))) {
 		guard let animation = animation else {
 			block()
@@ -189,7 +189,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		return observerUUID
 	}
 	
-	private func commit(updatesForSession UUID: String, using animation: UITableViewRowAnimation) {
+	private func commit(updatesForSession UUID: String, using animation: UITableView.RowAnimation) {
 		self.commit(sectionUpdates: self.sections.observers[UUID]?.events, using: animation)
 		
 		self.sections.enumerated().forEach { (idx,section) in
@@ -203,7 +203,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Parameters:
 	///   - updates: updates
 	///   - animation: animation to perform
-	private func commit(sectionUpdates updates: [Event]?, using animation: UITableViewRowAnimation) {
+	private func commit(sectionUpdates updates: [Event]?, using animation: UITableView.RowAnimation) {
 		guard let updates = updates else { return }
 		updates.forEach {
 			switch $0.type {
@@ -224,7 +224,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	///   - updates: updates
 	///   - section: parent section
 	///   - animation: animation
-	private func commit(rowUpdates updates: [Event]?, section: Int, using animation: UITableViewRowAnimation) {
+	private func commit(rowUpdates updates: [Event]?, section: Int, using animation: UITableView.RowAnimation) {
 		guard let updates = updates else { return }
 		updates.forEach {
 			switch $0.type {
@@ -450,7 +450,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	@discardableResult
 	public func remove(section: Section?) -> Self {
 		guard let section = section else { return self }
-		if let idx = self.sections.index(of: section) {
+		if let idx = self.sections.firstIndex(of: section) {
 			self.remove(sectionAt: idx)
 		}
 		return self
@@ -476,7 +476,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Parameters:
 	///   - id: identifier of the section
 	///   - animation: animation to use
-	public func reload(sectionWithID id: String, animation: UITableViewRowAnimation? = nil) {
+	public func reload(sectionWithID id: String, animation: UITableView.RowAnimation? = nil) {
 		self.section(forID: id)?.reload(animation)
 	}
 	
@@ -486,7 +486,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Parameters:
 	///   - ids: identifier of the sections to reload
 	///   - animation: animation to use
-	public func reload(sectionsWithIDs ids: [String],  animation: UITableViewRowAnimation? = nil) {
+	public func reload(sectionsWithIDs ids: [String],  animation: UITableView.RowAnimation? = nil) {
 		var indexes: IndexSet = IndexSet()
 		self.sections.enumerated().forEach { idx,item in
 			if let id = item.identifier, ids.contains(id) {
@@ -503,7 +503,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	/// - Parameters:
 	///   - sections: sections to reload
 	///   - animation: animation
-	public func reload(sections: [Section], animation: UITableViewRowAnimation? = nil) {
+	public func reload(sections: [Section], animation: UITableView.RowAnimation? = nil) {
 		var indexes: IndexSet = IndexSet()
 		self.sections.enumerated().forEach { idx,item in
 			if sections.contains(item) {
@@ -933,7 +933,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 	///   - tableView: The table-view object requesting this information.
 	///   - indexPath: An index path locating a row in tableView.
 	/// - Returns: The editing style of the cell for the row identified by indexPath.
-	open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+	open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		guard editingStyle == .delete else { return }
 		let row = self.sections[indexPath.section].rows[indexPath.row]
 		row._onDelete?(row)
@@ -1016,7 +1016,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		
 		
 		// If no other function are provided we can return the the automatic dimension
-		return UITableViewAutomaticDimension
+		return UITableView.automaticDimension
 	}
 	
 	/// This function is responsibile to register (if necessary) and header/footer section view and return a new instance
@@ -1167,7 +1167,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		}
 		
 		// universal fallback to automatic dimension
-		return UITableViewAutomaticDimension
+		return UITableView.automaticDimension
 	}
 	
 	/// This function attempt to evaluate the height of a cell
@@ -1196,7 +1196,7 @@ open class TableManager: NSObject, UITableViewDataSource, UITableViewDelegate {
 		
 		// Determines the best size of the view considering all constraints it holds
 		// and those of its subviews.
-		var height = cell.contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+		var height = cell.contentView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
 		if height == 0 {
 			height = cell.bounds.size.height // zero result, uses cell's bounds
 		}

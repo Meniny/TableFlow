@@ -49,7 +49,7 @@ open class SwitchTableViewCell: UITableViewCell, DeclarativeCell {
 public typealias SwitchRow = Row<SwitchTableViewCell>
 
 public extension Row where Cell == SwitchTableViewCell {
-    public convenience init(title: String?, isOn: Bool) {
+    convenience init(title: String?, isOn: Bool) {
         self.init(model: SwitchCellConfig.init(title: title, isOn: isOn))
     }
 }

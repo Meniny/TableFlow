@@ -6,10 +6,10 @@ open class Row<Cell: DeclarativeCell>: RowProtocol where Cell: UITableViewCell {
 	
 	public typealias TableRowConfigurator = ((_ maker: Row) -> (Void))
 	
-    public var accessoryType: UITableViewCellAccessoryType = .none
+    public var accessoryType: UITableViewCell.AccessoryType = .none
     
 	/// Item represented by the cell
-	open let model: Cell.T
+	public let model: Cell.T
 	
 	/// Optional identifier of the row
 	public var identifier: String? = nil
@@ -268,7 +268,7 @@ public extension DeclarativeCell where Self: UITableViewCell {
 		return nil
 	}
 	
-	static public func ==(lhs: Self, rhs: Self) -> Bool {
+	static func ==(lhs: Self, rhs: Self) -> Bool {
 		return lhs.hashValue == rhs.hashValue
 	}
 }

@@ -19,7 +19,7 @@ open class TextTableViewCell: UITableViewCell, DeclarativeCell {
     
     public typealias T = String
 
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.config()
     }
@@ -43,7 +43,7 @@ open class TextTableViewCell: UITableViewCell, DeclarativeCell {
 public typealias TextRow = Row<TextTableViewCell>
 
 public extension Row where Cell == TextTableViewCell {
-    public convenience init(text: String) {
+    convenience init(text: String) {
         self.init(model: text)
     }
 }

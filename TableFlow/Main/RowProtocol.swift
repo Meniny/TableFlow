@@ -152,6 +152,6 @@ public protocol RowProtocol {
 	/// indented while the table view is in editing mode.
 	func shouldIndentOnEditing(_ c: ((RowProtocol) -> (Bool))?)
     
-    var accessoryType: UITableViewCellAccessoryType { get set }
+    var accessoryType: UITableViewCell.AccessoryType { get set }
 
 }

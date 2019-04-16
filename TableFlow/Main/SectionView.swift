@@ -9,7 +9,7 @@ open class SectionView<View: DeclarativeView>: SectionProtocol where View: UITab
 	public typealias SectionViewConfigurator = ((_ maker: SectionView) -> (Void))
 
 	/// Class which represent the item of the section
-	open let item: View.T
+	public let item: View.T
 	
 	/// Reuse identifier to cache the section. By default its rely to the
 	/// subclass of the `UITableViewHeaderFooterView`.

@@ -46,7 +46,7 @@ open class SelectionTableViewCell: UITableViewCell, DeclarativeCell {
 public typealias SelectionRow = Row<SelectionTableViewCell>
 
 public extension Row where Cell == SelectionTableViewCell {
-    public convenience init(mode: SelectionAppearMode = .present, title: String, select d: String?, in selections: String...) {
+    convenience init(mode: SelectionAppearMode = .present, title: String, select d: String?, in selections: String...) {
         let m: SelectionData = (title: title, selections: selections, default: d)
         self.init(model: m)
         
@@ -57,7 +57,7 @@ public extension Row where Cell == SelectionTableViewCell {
             } else {
                 window.frame = UIScreen.main.bounds
             }
-            window.windowLevel = UIWindowLevelAlert
+            window.windowLevel = UIWindow.Level.alert
             window.backgroundColor = UIColor.clear
             
             let next = SelectionTableViewController.init(selections: self.cell?.selections ?? [])
